@@ -22,7 +22,7 @@ function main(ctime) {
   gameEngine();
   // console.log(ctime)
 }
-function isCollide(sarr) {
+function isCollide(snake) {
   return false;
 }
 
@@ -35,18 +35,36 @@ function gameEngine() {
     score = 0;
   }
 
-//   increment the score and regenerate the food
-if(snakeArr[0].y === food.y &&snakeArr[0].x ===food.x){
-    snakeArr.unshift({x: snakeArr[0].x + inputDir.x,y: snakeArr[0].y + inputDir.y})
+  //   increment the score and regenerate the food
+  if (snakeArr[0].y === food.y && snakeArr[0].x === food.x) {
+
+    score += 1;
+    if(score>hiscoreval){
+      hiscoreval = score;
+      localStorage.setItem("hiscore",JSON.stringify(hiscoreval))
+      hiscoreBox.innerHTML = "HiScore:" + hiscoreval
+    }
+    scoreBox.innerHTML = "Score:" + score;
+    snakeArr.unshift({
+      x: snakeArr[0].x + inputDir.x,
+      y: snakeArr[0].y + inputDir.y,
+    });
     let a = 2;
     let b = 16;
-    food = {x:Math.round(a+(b-a)* Math.random()),y:Math.round(a+(b-a)* Math.random())}
-}
+    food = {
+      x: Math.round(a + (b - a) * Math.random()),
+      y: Math.round(a + (b - a) * Math.random()),
+    };
+  }
 
-// moving the snake
-for(let i = snakeArr.length-2;i>=0;i--){
-    const element = array[i]
-}
+  // moving the snake
+  for (let i = snakeArr.length - 2; i >= 0; i--) {
+    snakeArr[i+1] = {...snakeArr[i]}
+  }
+    snakeArr[0].x += inputDir.x;
+    snakeArr[0].y += inputDir.y;
+
+
 
   // display the snake and food
   //   display the snake
@@ -75,6 +93,14 @@ for(let i = snakeArr.length-2;i>=0;i--){
 }
 
 // ============  Main logic starts here  =======
+let hiscore = localStorage.getItem("hiscore");
+if (hisscore === null) {
+  hiscoreval = 0;
+  localStorage.setItem("hiscore", JSON.stringify(hiscoreval));
+} else {
+  hiscore = JSON.parse(hiscore);
+  hiscoreBox.innerHtml = "HiScore: " + hiscore;
+}
 window.requestAnimationFrame(main);
 window.addEventListener("keydown", (e) => {
   inputDir = { x: 0, y: 1 }; //start the game
